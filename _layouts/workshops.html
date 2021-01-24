@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Jesse Howard">
+  <meta name="description" content="Jesse Howard is a designer based in the Netherlands...">
+
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <meta property="og:image" content="https://path to image">
+  <meta property="og:description" content="Jesse Howard is...">
+  <meta property="og:title" content="jessehoward.net">
+
+  <meta name="keywords" content=" ">
+
+  <link rel="stylesheet" href="assets/css/flickity.min.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/media.css">
+
+  <script src="assets/js/jquery-3.3.1.min.js"></script>
+  <script src="assets/js/flickity.pkgd.min.js"></script>
+
+  <script type="text/javascript">
+
+  $(document).ready(function(){
+    $(".flip").click(function(){
+    $(".flip").not(this).next().slideUp();
+    $(this).next().slideToggle("slow");
+
+    var $carousel =
+    $(this).parent().find('.carousel').flickity({
+      contain: true,
+      pageDots: false,
+      lazyLoad: true,
+    });
+    $('.carousel').flickity('resize');
+
+    var $carouselStatus = $('.carousel-status');
+
+    var flkty = $carousel.data('flickity');
+
+    function updateStatus() {
+      var cellNumber = flkty.selectedIndex + 1;
+      console.log( cellNumber )
+      $carouselStatus.text( cellNumber + ' / ' + flkty.slides.length );
+    }
+    updateStatus();
+    $carousel.on( 'select.flickity', updateStatus );
+
+    });
+
+
+  });
+
+  </script>
+</head>
+<body>
+  {% include navigation.html %}
+<div class ="main">
+
+  <ul class ="projectlist">
+     {% for workshop in site.workshops reversed %}
+    <div>
+    <li class="flip">{{ workshop.name }}</li>
+    <div class="panel">
+
+      <div class ='carousel-container'>
+        <div class="carousel">
+          {% for image in workshop.images %}
+            <div class="carousel-cell"> <img class="carousel-cell-image" data-flickity-lazyload="{{ image.image-path }}" alt="{{ image.alt }} "> </div>
+          {% endfor %}
+        </div>
+        <!-- <p class="carousel-status"></p> -->
+      </div>
+      <div class="projectdesc">
+         <p>
+             {{ workshop.content }}
+        </p>
+        {{  workshop.location }} <br>
+        {{ workshop.year }}
+      </div>
+    </div>
+
+   </div>
+   {% endfor %}
+
+  </ul>
+
+</div>
+
+</body>
+
+</html>

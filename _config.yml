@@ -1,0 +1,7 @@
+name: Jesse Howard
+collections:
+  projects:
+    sort_by: weight
+  workshops:
+    sort_by: weight
+  experiments:

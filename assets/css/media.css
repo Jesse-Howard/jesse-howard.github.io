@@ -1,0 +1,88 @@
+
+/* Mobile */
+@media screen and ( min-width: 0px ) and ( max-width: 799px ) {
+  .sidebar {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    padding-top: 0px;
+  }
+
+  .sidebar a{
+    float:left;
+    padding: 0px 0px 0px 0px;
+  }
+  .sidebar p{
+    float:left;
+    padding: 0px 0px 0px 0px;
+  }
+  
+  .sidebar .logo{
+    padding: 2px 0px 0px 8px;
+  }
+
+  .main {
+     margin-left: 0px;
+     padding-top: 0px;
+  }
+  .projectlist
+  {
+    padding-left: 20px;
+    margin-top: 0px;
+  }
+
+  .carousel-container{
+    width: 100%;
+    padding-top: 20px;
+  }
+
+  .projectdesc{
+    width: 100%;
+    padding-top: 40px;
+  }
+}
+
+/* Mid-Size */
+@media screen and ( min-width: 800px ) and ( max-width: 999px) {
+
+  .sidebar .menu {
+  clear: none;
+  max-height: none;
+}
+.sidebar .menu-icon {
+  display: none;
+}
+
+  .projectlist
+  {
+    padding-left: 20px;
+  }
+
+  .carousel-container{
+    width: 100%;
+    padding-top: 20px;
+  }
+
+  .projectdesc{
+    width: 100%;
+    padding-top: 20px;
+  }
+}
+/* Desktop */
+@media screen and ( min-width: 1000px ) {
+  .sidebar .menu {
+  clear: none;
+  max-height: none;
+}
+.sidebar .menu-icon {
+  display: none;
+}
+.projectlist
+{
+  padding-left: 20px;
+}
+
+  .projectdesc{
+    max-width: 600px;
+  }
+}

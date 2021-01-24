@@ -1,0 +1,44 @@
+---
+layout: blank
+title: Experiments
+---
+{% for experiment in site.experiments  %}
+{% assign basevalue = experiment.weight | times: 25 %}
+{% assign leftvalue = basevalue | plus: 160 %}
+{% assign topvalue = basevalue | plus: 30 %}
+  <div class = "draggable"  style="left: {{ leftvalue }}px; top: {{ topvalue }}px;" > 
+    <div class="experiment-title">
+      {{ experiment.name }}
+   </div>
+   <div>
+   <div class = "experiment-text">
+    {{ experiment.content }}
+   </div>
+   <div class = "experiment-image">
+     <img src= "{{ experiment.image_path }}" alt="{{ experiment.name}}">
+   </div>
+  </div>
+</div>
+{% endfor %}
+
+<div class = "draggable" id = "about">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    about<br><br>
+    A growing collection of experiments, observations, tests, and works-in-progress: Updated sporadically and best viewed on Desktop.
+</div>
+
+<div id="reset" onClick="window.location.reload()">reset</div>
+
+<script>
+$( ".draggable" ).draggable( {
+    stack:".draggable",
+    distance:0,
+} );
+
+$('.close').on("click", function () {
+    $(this).parent('div').fadeOut();
+});
+</script>
+ 
+</body>
+</html>

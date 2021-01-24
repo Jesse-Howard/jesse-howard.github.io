@@ -1,0 +1,326 @@
+body {
+  font-family: "Nitti Grotesk", sans-serif;
+  max-width: 2000px;
+}
+
+p{
+  color:black;
+}
+.sidebar {
+  height: 100%;
+  width: 150px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  overflow-x: hidden;
+  padding-top: 10px;
+}
+
+.sidebar ul{
+  list-style: none;
+  padding: 0px;
+  overflow: hidden;
+}
+
+
+.sidebar a{
+  padding: 6px 8px 7px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color:black;
+  display: block;
+}
+
+
+.sidebar .logo{
+  color:blue;
+  padding: 0px 0px 10px 16px;
+  margin: 0px;
+  font-size: 20px;
+
+}
+.sidebar a:hover{
+  color:black;
+}
+
+/* hamburger */
+/* menu */
+
+.sidebar .menu {
+  clear: both;
+  max-height: 0;
+  transition: max-height .2s ease-out;
+  margin-top: 4px;
+}
+
+/* menu icon */
+
+.sidebar .menu-icon {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  padding: 9px 20px;
+  position: relative;
+  user-select: none;
+}
+
+.sidebar .menu-icon .navicon {
+  background: #333;
+  display: block;
+  height: 2px;
+  position: relative;
+  transition: background .2s ease-out;
+  width: 18px;
+}
+
+.sidebar .menu-icon .navicon:before,
+.sidebar .menu-icon .navicon:after {
+  background: #333;
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  transition: all .2s ease-out;
+  width: 100%;
+}
+
+.sidebar .menu-icon .navicon:before {
+  top: 5px;
+}
+
+.sidebar .menu-icon .navicon:after {
+  top: -5px;
+}
+
+/* menu btn */
+
+.sidebar .menu-btn {
+  display: none;
+}
+
+.sidebar .menu-btn:checked ~ .menu {
+  max-height: 240px;
+}
+
+.sidebar .menu-btn:checked ~ .menu-icon .navicon {
+  background: transparent;
+}
+
+.sidebar .menu-btn:checked ~ .menu-icon .navicon:before {
+  transform: rotate(-45deg);
+}
+
+.sidebar .menu-btn:checked ~ .menu-icon .navicon:after {
+  transform: rotate(45deg);
+}
+
+.sidebar .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:before,
+.sidebar .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:after {
+  top: 0;
+}
+
+
+.main {
+  margin-left: 150px; /* Same as the width of the sidenav */
+  padding-top: 20px;
+  margin-right: 20px;
+}
+
+.projectlist li{
+  font-size: 20px;
+  display: block;
+  padding: 6px 8px 6px 0px;
+  border-top: 0px;
+  border-left: 0px;
+  border-right: 0px;
+  border-bottom: 1px;
+  border-color: black;
+  border-style: dashed;
+  clear:left;
+  cursor: pointer;
+}
+
+.panel {
+  display: none;
+  overflow: hidden;
+  position: relative;
+}
+
+.projectdesc{
+  width: 35%;
+  padding: 20px 0px 20px 0px;
+  margin: 0px 0x 0px 0px;
+  color:black;
+  font-family: "Nitti Grotesk", sans-serif;
+  display:block;
+  float: left;
+  height: 500px;
+}
+
+.projectdesc a{
+  color: black;
+}
+.carousel-container{
+  width:60%;
+  float: right;
+  padding-top: 40px;
+
+}
+.carousel-container {
+  /* width: 600px; */
+  padding: 40px 0px 0px 0px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.carousel-container img{
+  float:right;
+  /* width: 600px; */
+  vertical-align: center;
+
+}
+
+.carousel-cell-image {
+  display: block;
+  max-height: 100%;
+  margin: 0 auto;
+  max-width: 100%;
+  opacity: 0;
+  -webkit-transition: opacity 0.4s;
+          transition: opacity 0.4s;
+}
+
+/* fade in lazy loaded image */
+.carousel-cell-image.flickity-lazyloaded,
+.carousel-cell-image.flickity-lazyerror {
+  opacity: 1;
+}
+
+ .carousel-cell {
+  width: 100%;
+  /* height: 400px; */
+  margin-right: 10px;
+}
+
+.carousel-cell img{
+  width:100%;
+}
+
+.carousel-status{
+  text-align: center;
+  margin-top: 11px;
+}
+
+/* .flickity-page-dots {
+  display:none;
+} */
+/* small arrows below */
+.flickity-prev-next-button {
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  top:calc(100% + 20px);
+}
+
+.flickity-prev-next-button.next{
+  right:0px;
+}
+
+.flickity-prev-next-button.previous{
+  left:0px;
+}
+
+/* arrow color */
+.flickity-prev-next-button .arrow {
+  fill: black;
+}
+.flickity-prev-next-button.no-svg {
+  color: black;
+}
+.flickity-prev-next-button:hover {
+  background: Transparent;
+}
+
+.flickity-prev-next-button:disabled {
+  display: none;
+}
+
+
+
+/* Experiment Section */
+.draggable {
+  position: absolute;;
+  width: 700px;
+  height: 500px;
+  background: rgb(255, 255, 255);
+  border: black;
+  border-style: dashed;
+  border-width: 1px;
+  cursor:grab;
+}
+.ui-draggable-dragging {
+  cursor: grabbing;
+}
+
+#reset{
+  top:50px;
+  right:40px;
+  position: absolute;
+  cursor:pointer;
+}
+
+#about{
+  width:400px;
+  height:200px;
+  background-color: white;
+  border: solid;
+  border-color: blue;
+  border-width: 1px;
+  padding: 10px;  
+  position: absolute;
+  top:20%;
+  left:25%;  	
+  color: blue;
+  background-color: peachpuff;
+}
+
+button.close {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  color: blue;
+}
+
+.close{
+  float:right;
+  font-size: 18px;
+}
+
+.experiment-title{
+  padding-left: 10px;
+}
+.experiment-text{
+  padding: 40px 10px 10px 10px;
+  float: left;
+  width: 35%;
+}
+
+.experiment-text p{
+  margin: 0px 0px 0px 0px;
+}
+
+.experiment-image{
+  padding: 40px 10px 10px 10px;
+  flex-basis: 400px;
+  float: right;
+  width: 58%;;
+}
+
+.experiment-image img{
+  width: 100%;
+}
