@@ -4,7 +4,7 @@ location: Design Academy Eindhoven
 year: 2015 – 
 images: 
  - image-path: assets/images/Workshops/Robodog.jpg
-   alt: Flashlight Components
+   alt: Marco as Robodog
 weight: 1
 ---
 An on going series of workshop introducing electronics prototyping with Arduino to master students at the Design Academy Eindhoven. The workshops have been hosted by [Microlab](https://microlab.nl), [MAD Emergent Art Center](https://madlab.nl/?lang=en), [Baltan Laboratories](https://www.baltanlaboratories.org/), and [Ideeenlab](https://ideeenlab.nl/), and  developed and offered in collaboration with (in no particular order):
