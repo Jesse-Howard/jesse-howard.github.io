@@ -3,7 +3,7 @@ name: Electronics Prototying DAE
 location: Design Academy Eindhoven
 year: 2015 – 
 images: 
- - image-path: assets/images/Workshops/robodog.jpg
+ - image-path: assets/images/Workshops/Robodog.jpg
    alt: Flashlight Components
 weight: 1
 ---
