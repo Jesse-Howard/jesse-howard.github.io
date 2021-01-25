@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'NittiGrotesk-Regular';
-  src:  url('assets/NittiGrotesk-Regular.woff2') format('woff2'),
-        url('assets/NittiGrotesk-Regular.woff') format('woff');
+  src:  url('../NittiGrotesk-Regular.woff2') format('woff2'),
+        url('../NittiGrotesk-Regular.woff') format('woff');
 }
 
 
