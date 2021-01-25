@@ -1,5 +1,5 @@
 ---
-name: Electronics Prototying DAE
+name: Electronics Prototyping DAE
 location: Design Academy Eindhoven
 year: 2015 – 
 images: 
