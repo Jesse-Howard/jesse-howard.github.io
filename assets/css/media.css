@@ -1,6 +1,6 @@
 
 /* Mobile */
-@media screen and ( min-width: 0px ) and ( max-width: 799px ) {
+@media screen and ( max-width: 767px ) {
   .sidebar {
     overflow: hidden;
     width: 100%;
@@ -10,7 +10,7 @@
 
   .sidebar a{
     float:left;
-    padding: 0px 0px 0px 0px;
+    padding: 10px 0px 0px 20px;
   }
   .sidebar p{
     float:left;
@@ -18,7 +18,7 @@
   }
   
   .sidebar .logo{
-    padding: 2px 0px 0px 8px;
+    padding: 2px 0px 0px 20px;
   }
 
   .main {
@@ -43,7 +43,7 @@
 }
 
 /* Mid-Size */
-@media screen and ( min-width: 800px ) and ( max-width: 999px) {
+@media screen and ( min-width: 768px ) and ( max-width: 999px) {
 
   .sidebar .menu {
   clear: none;
