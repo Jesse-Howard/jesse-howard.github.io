@@ -6,7 +6,7 @@ title: Experiments
 {% assign basevalue = experiment.weight | times: 25 %}
 {% assign leftvalue = basevalue | plus: 160 %}
 {% assign topvalue = basevalue | plus: 30 %}
-  <div class = "draggable"  style="left: {{ leftvalue }}px; top: {{ topvalue }}px;" > 
+  <div class = "draggable"  style="left: {{ leftvalue }}px; top: {{ topvalue }}px; z-index: {{ weight }};" > 
     <div class="experiment-title">
       {{ experiment.name }}
    </div>
