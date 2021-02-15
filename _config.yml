@@ -5,3 +5,4 @@ collections:
   workshops:
     sort_by: weight
   experiments:
+    sort_by: weight
