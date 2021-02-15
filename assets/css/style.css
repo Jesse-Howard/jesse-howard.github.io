@@ -290,6 +290,7 @@ p{
   left:25%;  	
   color: blue;
   background-color: peachpuff;
+  z-index: 999;
 }
 
 button.close {
