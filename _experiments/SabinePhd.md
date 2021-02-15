@@ -2,7 +2,7 @@
 name: Circuit Board Book Cover
 images:
 image_path: assets/images/Experiments/BookCover.jpg
-  alt: PCB Book Cover
+alt: PCB Book Cover
 weight: 2
 ---
 
