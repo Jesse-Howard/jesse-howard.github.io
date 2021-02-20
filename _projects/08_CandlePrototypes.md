@@ -1,5 +1,5 @@
 ---
-name: Candle Prototypes
+name: Actuated Privacy
 images:
  - image-path: assets/images/08_CandlePrototypes/Candle01.jpg
    alt: Carbon Sensor
