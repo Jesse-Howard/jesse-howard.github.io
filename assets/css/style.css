@@ -342,8 +342,8 @@ button.close {
   justify-content: center;
   text-align: center;
   position: fixed;
-  left: 10px;
-  bottom: 10px;
+  right: 40px;
+  bottom: 40px;
   z-index: 999;
 }
 
