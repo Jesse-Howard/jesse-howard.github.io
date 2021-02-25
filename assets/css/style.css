@@ -332,3 +332,53 @@ button.close {
 .experiment-image img{
   width: 100%;
 }
+
+/* WIP BADGE */
+
+.center {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.circle {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  color: blue;
+  background: white;
+  border-radius: 50%;
+  border: 2px solid;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(10px)
+  }
+  50% {
+    transform: translateX(-10px)
+  }
+  100% {
+    transform: translateX(10px)
+  }
+}
+
+.badgetext {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
+  animation: rotate 14s linear infinite;
+  fill: blue;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
+}
