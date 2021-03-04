@@ -383,7 +383,7 @@ button.close {
 }
 
 #rotatedText{
-  transform: rotate(195deg);
+  transform: rotate(180deg);
   transform-origin: center center;
 }
 @keyframes rotate {
