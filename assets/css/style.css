@@ -253,7 +253,12 @@ p{
   display: none;
 }
 
-
+/* Home Slider */
+.main-carousel{
+  margin: auto;
+  width: 90%;
+  height: 100vh;
+}
 
 /* Experiment Section */
 .draggable {
