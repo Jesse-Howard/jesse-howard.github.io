@@ -188,6 +188,7 @@ p{
 
 }
 
+.main-carousel-cell-image,
 .carousel-cell-image {
   display: block;
   max-height: 100%;
@@ -199,6 +200,8 @@ p{
 }
 
 /* fade in lazy loaded image */
+.main-carousel-cell-image.carousel-cell-image.flickity-lazyloaded,
+.main-carousel-cell-image.carousel-cell-image.flickity-lazyerror,
 .carousel-cell-image.flickity-lazyloaded,
 .carousel-cell-image.flickity-lazyerror {
   opacity: 1;
