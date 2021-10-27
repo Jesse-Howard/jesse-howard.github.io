@@ -1,0 +1,18 @@
+body{
+    background: rgb(183, 105, 190);
+}
+
+video{
+        display: block;
+        width: 60%;
+        margin: auto;
+        padding-top: 80px;
+}
+
+p{
+    color:white;
+    font-size: 30px;
+    text-align: center;
+    font-family: sans-serif;
+    font-weight: bold;
+}
