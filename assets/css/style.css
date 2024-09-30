@@ -391,8 +391,8 @@ button.close {
 }
 
 #rotatedText{
-  transform: rotate(180deg);
-  transform-origin: center center;
+  /* transform: rotate(180deg); */
+  /* transform-origin: center center; */
 }
 @keyframes rotate {
   from { transform: rotate(0); }
