@@ -2,4 +2,190 @@
 permalink: "/recipetest/"
 title: Wikidata Recipe Test
 ---
-hello
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>New recipe – timelab wikibase</title>
+<style>
+:root{color-scheme:light dark;font-family:system-ui,sans-serif}
+body{max-width:760px;margin:2rem auto;padding:0 1rem;line-height:1.4}
+h1{font-size:1.4rem} fieldset{margin:1rem 0;border:1px solid #8886;border-radius:8px}
+label{display:block;margin:.6rem 0 .2rem;font-size:.9rem}
+input,select,button,textarea{font:inherit;padding:.4rem;border:1px solid #8886;border-radius:6px;background:transparent;color:inherit}
+input[type=text],input[type=password],input[type=url],textarea{width:100%;box-sizing:border-box}
+.row{display:grid;grid-template-columns:3fr 1fr 1fr auto;gap:.4rem;align-items:start;margin:.4rem 0}
+.ac{position:relative}.ac ul{position:absolute;z-index:5;left:0;right:0;margin:0;padding:0;list-style:none;background:Canvas;border:1px solid #8886;border-radius:6px;max-height:220px;overflow:auto}
+.ac li{padding:.4rem;cursor:pointer}.ac li:hover{background:#8883}.ac small{opacity:.7}
+.picked{font-size:.8rem;opacity:.75}
+pre{background:#8882;padding:.8rem;border-radius:6px;overflow:auto;font-size:.8rem}
+.ok{color:#2a8a3a}.err{color:#c33}
+</style></head><body>
+<h1>New recipe</h1>
+
+<fieldset><legend>Settings</legend>
+<label>Recipe class item ID (instance of "Recipe")
+<input type="text" id="cfgRecipe" placeholder="Q__ (fill in when the Recipe item exists)"></label>
+<div style="margin-top:.8rem"><button type="button" id="login">Log in with timelab wiki</button> <span id="who"></span></div>
+</fieldset>
+
+<fieldset><legend>Recipe</legend>
+<label>Label (English)<input type="text" id="label"></label>
+<label>Description (English)<input type="text" id="desc"></label>
+<label><input type="checkbox" id="isMat" checked> also instance of material (Q1)</label>
+<label><input type="checkbox" id="isBio" checked> also instance of biobased material (Q2)</label>
+<label>Has use (P4), optional
+<div class="ac" data-single="use"><input type="text" placeholder="search items…"><ul hidden></ul><div class="picked"></div></div></label>
+<label>SameAs (P1), optional URL<input type="url" id="sameas"></label>
+</fieldset>
+
+<fieldset><legend>Made from material (P3)</legend>
+<div id="rows"></div>
+<button type="button" id="add">+ Add ingredient</button>
+</fieldset>
+
+<button type="button" id="preview">Preview JSON</button>
+<button type="button" id="save">Create item</button>
+<p id="msg"></p><pre id="out" hidden></pre>
+
+<script>
+const CFG={
+  api:'https://timelab.wikibase.cloud/w/api.php',
+  entityUri:'https://timelab.wikibase.cloud/entity/',
+  location:'Q3',                                   // P5, same for all recipes
+  units:{g:{id:'Q13',prop:'P6',name:'g (grams)'}, ml:{id:'Q14',prop:'P7',name:'mL'}}
+};
+const $=s=>document.querySelector(s);
+const ent=id=>({value:{'entity-type':'item',id},type:'wikibase-entityid'});
+
+// ---- autocomplete (wbsearchentities, anonymous read) ----
+function makeAC(box){
+  const inp=box.querySelector('input'),ul=box.querySelector('ul'),pk=box.querySelector('.picked');
+  let t;box.dataset.id='';
+  inp.addEventListener('input',()=>{box.dataset.id='';pk.textContent='';clearTimeout(t);
+    if(inp.value.length<2){ul.hidden=true;return}
+    t=setTimeout(async()=>{
+      try{
+        const u=CFG.api+'?action=wbsearchentities&format=json&origin=*&language=en&uselang=en&type=item&limit=10&search='+encodeURIComponent(inp.value);
+        const r=await (await fetch(u)).json();
+        ul.innerHTML='';
+        (r.search||[]).forEach(e=>{const li=document.createElement('li');
+          li.innerHTML=`${e.label||e.id} <small>(${e.id}) ${e.description||''}</small>`;
+          li.onclick=()=>{box.dataset.id=e.id;inp.value=e.label||e.id;pk.textContent='→ '+e.id;ul.hidden=true};
+          ul.appendChild(li)});
+        ul.hidden=!ul.children.length;
+      }catch(x){ul.hidden=true;$('#msg').innerHTML='<span class="err">Search failed: '+x.message+'</span>'}
+    },250)});
+  document.addEventListener('click',e=>{if(!box.contains(e.target))ul.hidden=true});
+}
+document.querySelectorAll('.ac').forEach(makeAC);
+
+// ---- ingredient rows ----
+function addRow(){
+  const d=document.createElement('div');d.className='row';
+  d.innerHTML=`<div class="ac"><input type="text" placeholder="ingredient…"><ul hidden></ul><div class="picked"></div></div>
+  <input type="text" class="amt" inputmode="decimal" placeholder="amount">
+  <select class="unit">${Object.entries(CFG.units).map(([k,u])=>`<option value="${k}">${u.name}</option>`).join('')}</select>
+  <button type="button" title="Remove">✕</button>`;
+  d.querySelector('button').onclick=()=>d.remove();
+  $('#rows').appendChild(d);makeAC(d.querySelector('.ac'));
+}
+$('#add').onclick=addRow;addRow();
+
+// ---- build entity JSON ----
+function build(){
+  const errs=[],claims=[];
+  const label=$('#label').value.trim();if(!label)errs.push('Label is required.');
+  const rc=$('#cfgRecipe').value.trim();
+  if(!/^Q\d+$/.test(rc))errs.push('Enter the Recipe class item ID (Q…) in Settings.');
+  const stmt=(p,dv,type,qual)=>({mainsnak:{snaktype:'value',property:p,datavalue:dv},type:'statement',rank:'normal',...(qual?{qualifiers:qual}:{})});
+  [rc,$('#isMat').checked&&'Q1',$('#isBio').checked&&'Q2'].filter(Boolean).forEach(q=>claims.push(stmt('P2',ent(q))));
+  claims.push(stmt('P5',ent(CFG.location)));
+  const use=$('[data-single=use]');
+  if(use.querySelector('input').value&&!use.dataset.id)errs.push('"Has use": pick an item from the list.');
+  if(use.dataset.id)claims.push(stmt('P4',ent(use.dataset.id)));
+  const sa=$('#sameas').value.trim();
+  if(sa)claims.push(stmt('P1',{value:sa,type:'string'}));
+  let n=0;
+  document.querySelectorAll('#rows .row').forEach((r,i)=>{
+    const box=r.querySelector('.ac'),amt=r.querySelector('.amt').value.trim().replace(',','.');
+    if(!box.dataset.id&&!amt&&!box.querySelector('input').value)return; // empty row
+    n++;
+    if(!box.dataset.id){errs.push(`Row ${i+1}: pick an ingredient from the list.`);return}
+    if(!/^\d+(\.\d+)?$/.test(amt)){errs.push(`Row ${i+1}: amount must be a positive number.`);return}
+    const u=CFG.units[r.querySelector('.unit').value];
+    claims.push(stmt('P3',ent(box.dataset.id),0,{[u.prop]:[{snaktype:'value',property:u.prop,
+      datavalue:{value:{amount:'+'+amt,unit:CFG.entityUri+u.id},type:'quantity'}}]}));
+  });
+  if(!n)errs.push('Add at least one ingredient.');
+  const data={labels:{en:{language:'en',value:label}},claims};
+  const desc=$('#desc').value.trim();if(desc)data.descriptions={en:{language:'en',value:desc}};
+  return{errs,data};
+}
+function show(errs,data){
+  $('#msg').innerHTML=errs.length?'<span class="err">'+errs.join('<br>')+'</span>':'';
+  if(!errs.length){$('#out').hidden=false;$('#out').textContent=JSON.stringify(data,null,2)}
+}
+$('#preview').onclick=()=>{const{errs,data}=build();show(errs,data)};
+
+// ---- OAuth 2: authorization code + PKCE (public client, no secret) ----
+const OA={client:'8480c326b67889adf9edd563a6183ab9',redirect:'https://jessehoward.net/recipetest/',
+ auth:'https://timelab.wikibase.cloud/w/rest.php/oauth2/authorize',
+ tok:'https://timelab.wikibase.cloud/w/rest.php/oauth2/access_token'};
+const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const rnd=()=>b64(crypto.getRandomValues(new Uint8Array(32)));
+const getTok=()=>{try{return JSON.parse(localStorage.getItem('oa'))}catch(e){return null}};
+function saveTok(j){const o=getTok()||{};const t={access:j.access_token,refresh:j.refresh_token||o.refresh,exp:Date.now()+(j.expires_in||3600)*1000-30000};localStorage.setItem('oa',JSON.stringify(t));return t}
+async function tokenReq(p){
+  const j=await (await fetch(OA.tok,{method:'POST',body:new URLSearchParams({client_id:OA.client,...p})})).json();
+  if(!j.access_token)throw new Error(j.error_description||j.message||j.error||'token request failed');
+  return saveTok(j)}
+async function accessToken(){
+  let t=getTok();if(!t)return null;
+  if(Date.now()>t.exp){if(!t.refresh){localStorage.removeItem('oa');return null}
+    t=await tokenReq({grant_type:'refresh_token',refresh_token:t.refresh})}
+  return t.access}
+async function login(){
+  const v=rnd(),st=rnd();sessionStorage.setItem('pkce',JSON.stringify({v,st}));
+  const c=b64(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)));
+  location=OA.auth+'?'+new URLSearchParams({response_type:'code',client_id:OA.client,redirect_uri:OA.redirect,state:st,code_challenge:c,code_challenge_method:'S256'})}
+async function whoami(){
+  const btn=$('#login');let a=null;
+  try{a=await accessToken()}catch(x){$('#msg').innerHTML='<span class="err">Session expired: '+x.message+'</span>'}
+  if(!a){$('#who').textContent='not logged in';btn.textContent='Log in with timelab wiki';btn.onclick=login;return}
+  btn.textContent='Log out';btn.onclick=()=>{localStorage.removeItem('oa');whoami()};
+  try{
+    const r=await (await fetch(CFG.api+'?action=query&meta=userinfo&format=json&origin=*',{headers:{Authorization:'Bearer '+a}})).json();
+    const u=r.query.userinfo;
+    $('#who').innerHTML=u.anon!==undefined?'<span class="err">token not accepted by the API (seen as anonymous)</span>':'logged in as <b>'+u.name+'</b>';
+  }catch(x){$('#who').innerHTML='<span class="err">API check failed: '+x.message+'</span>'}}
+async function init(){
+  const rc=$('#cfgRecipe');rc.value=localStorage.getItem('recipeClass')||'';
+  rc.oninput=()=>localStorage.setItem('recipeClass',rc.value.trim());
+  const q=new URLSearchParams(location.search);
+  if(q.get('code')){
+    try{const p=JSON.parse(sessionStorage.getItem('pkce')||'{}');
+      if(q.get('state')!==p.st)throw new Error('state mismatch, please try logging in again');
+      await tokenReq({grant_type:'authorization_code',code:q.get('code'),redirect_uri:OA.redirect,code_verifier:p.v});
+    }catch(x){$('#msg').innerHTML='<span class="err">Login failed: '+x.message+'</span>'}
+    history.replaceState(null,'',location.pathname)}
+  else if(q.get('error'))$('#msg').innerHTML='<span class="err">Login refused: '+(q.get('error_description')||q.get('error'))+'</span>';
+  whoami()}
+init();
+
+// ---- save (wbeditentity new=item), attributed to the logged-in user ----
+$('#save').onclick=async()=>{
+  const{errs,data}=build();show(errs,data);if(errs.length)return;
+  try{
+    const a=await accessToken();
+    if(!a){$('#msg').innerHTML='<span class="err">Please log in first.</span>';return}
+    const H={Authorization:'Bearer '+a};
+    $('#msg').textContent='Saving…';
+    const t=await (await fetch(CFG.api+'?action=query&meta=tokens&type=csrf&format=json&origin=*',{headers:H})).json();
+    const body=new URLSearchParams({action:'wbeditentity',new:'item',format:'json',assert:'user',data:JSON.stringify(data),token:t.query.tokens.csrftoken,summary:'Created via recipe form'});
+    const r=await (await fetch(CFG.api+'?origin=*',{method:'POST',headers:H,body})).json();
+    if(r.error)throw new Error(r.error.info);
+    const id=r.entity.id;
+    $('#msg').innerHTML=`<span class="ok">Created <a href="${CFG.entityUri.replace('/entity/','/wiki/Item:')}${id}" target="_blank">${id}</a></span>`;
+  }catch(x){$('#msg').innerHTML='<span class="err">Save failed: '+x.message+'</span>'}
+};
+</script></body></html>
